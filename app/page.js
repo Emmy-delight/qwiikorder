@@ -2,7 +2,7 @@ import Image from "next/image"
 
 export default function Home () {
   return (
-       <main>
+       <main className="min-h-screen">
         <h1>Welcome Here</h1>
         <p>Welcome to QWIIKORDER</p>
         <Image 
