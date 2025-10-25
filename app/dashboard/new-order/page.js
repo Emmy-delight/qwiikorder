@@ -1,6 +1,6 @@
   "use client"
 import { db } from "@/config/firebase.config";
-import { CircularProgress, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { addDoc, collection } from "firebase/firestore";
 import { useFormik } from "formik";
 import { useSession } from "next-auth/react";
@@ -18,7 +18,12 @@ const schema = yup.object().shape({
 
 export default function NewOrder() {
      const [progress, setProgress] = useState(false); 
+     const  [open, setOpen] = useState(false);
      const {data : session} = useSession();
+
+     const handleClose =()=>{
+        setOpen(false)
+     }
      const {handleSubmit,handleChange,handleBlur,values,errors,touched} =useFormik({
         initialValues: {
             customerName:"",
@@ -40,13 +45,14 @@ export default function NewOrder() {
                  notes: values.notes,
                  timecreated: new Date().getTime(),
                }).then(()=>{
-                alert("Your order has been taken");
-                setProgress(false)
+                   setOpen(true)
+                   setProgress(false)
                  resetForm()
                })
                .catch(e=>{
                 console.error(e);
                 alert("Unable to submit")
+                setOpen(false)
                 setProgress(false)
                })
         },
@@ -153,6 +159,18 @@ export default function NewOrder() {
                    {progress ? <CircularProgress color="inherit" size="30px" /> : null }
                 </button>
             </form>
+            {/* success Dialog */}
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Success</DialogTitle>
+                <DialogContent>
+                     <Typography>Order Placed Successfully</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary" variant="contained" autoFocus>
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
         </main>
      )
