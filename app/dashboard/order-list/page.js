@@ -1,22 +1,23 @@
      "use client"
 import { db } from "@/config/firebase.config";
 import { CircularProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { LuView } from "react-icons/lu";
 
 export default function OrderList () {
-    const [order, setOrder] = React.useState([]);
+    const [orders, setOrders] = React.useState([]);
     const [loading, setLoading] = React.useState(true)
     const {data: session} = useSession();
-    // console.log(session)
-
+    
     React.useEffect(()=>{
         const fetchOrders = async ()=>{
             try{
                 const q = query(collection(db,"orders"),
-                where("user", "==", session?.user?.id));
+                where("user", "==", session?.user?.id),
+                // orderBy("timecreated","desc"),
+            );
                 const snapShot = await getDocs(q)
 
                 const compileOrder = [];
@@ -26,15 +27,14 @@ export default function OrderList () {
                         data: doc.data(),
                     });
                 });
-                  console.log(compileOrder)
-                  setOrder(compileOrder);
+                  setOrders(compileOrder);
                  
             }catch(error) {
                 console.error("Error occured while fetching Orders", error)
             }
             finally{
                 setLoading(false)
-            }
+            };
         }
         if(session){
             fetchOrders();
@@ -48,10 +48,10 @@ export default function OrderList () {
     )
     return (
         <main className="min-h-screen max-w-5xl mx-auto my-10 p-4">
-             <h1 className="text-4xl mb-10 text-center font-bold">All Orders</h1>
+             <h1 className="text-4xl mb-10 text-center font-bold text-gray-700">All Orders</h1>
             <TableContainer component={Paper} className="shadow-lg rounded-xl">
                 <Table>
-                    <TableHead sx={{backgroundColor: "gray"}}>
+                    <TableHead sx={{backgroundColor: "#8A8AFF"}}>
                         <TableRow>
                              <TableCell sx={{color: "white"}}>Customer Name</TableCell>
                              <TableCell sx={{color: "white"}}>ServiceType</TableCell>
@@ -59,11 +59,11 @@ export default function OrderList () {
                              <TableCell sx={{color: "white"}}>Amount (₦)</TableCell>
                              <TableCell sx={{color:"white"}}>Status</TableCell>
                              <TableCell sx={{color: "white"}}>Note</TableCell>
-                             <TableCell sx={{color: "white"}}><LuView className="text-2xl"/></TableCell>
+                             <TableCell sx={{color: "white"}}>View</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                         {order.map((order)=>
+                         {orders.map((order)=>
                         <TableRow key={order.id} sx={{borderBottom: "gray"}}>
                             <TableCell>{order.data.customerName}</TableCell>
                             <TableCell>{order.data.serviceType}</TableCell>
