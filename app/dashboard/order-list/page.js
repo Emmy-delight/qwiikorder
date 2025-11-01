@@ -3,6 +3,7 @@ import { db } from "@/config/firebase.config";
 import { CircularProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { LuView } from "react-icons/lu";
 
@@ -10,7 +11,8 @@ export default function OrderList () {
     const [orders, setOrders] = React.useState([]);
     const [loading, setLoading] = React.useState(true)
     const {data: session} = useSession();
-    
+    const router = useRouter()
+
     React.useEffect(()=>{
         const fetchOrders = async ()=>{
             try{
@@ -51,7 +53,7 @@ export default function OrderList () {
              <h1 className="text-4xl mb-10 text-center font-bold text-gray-700">All Orders</h1>
             <TableContainer component={Paper} className="shadow-lg rounded-xl">
                 <Table>
-                    <TableHead sx={{backgroundColor: "#8A8AFF"}}>
+                    <TableHead sx={{backgroundColor: "gray"}}>
                         <TableRow>
                              <TableCell sx={{color: "white"}}>Customer Name</TableCell>
                              <TableCell sx={{color: "white"}}>ServiceType</TableCell>
@@ -64,7 +66,7 @@ export default function OrderList () {
                     </TableHead>
                     <TableBody>
                          {orders.map((order)=>
-                        <TableRow key={order.id} sx={{borderBottom: "gray"}}>
+                        <TableRow onClick={()=>router.push(`/dashboard/order-list/${order.id}`)} key={order.id} sx={{borderBottom: "gray" , cursor: "pointer"}}>
                             <TableCell>{order.data.customerName}</TableCell>
                             <TableCell>{order.data.serviceType}</TableCell>
                             <TableCell>{order.data.deliveryDate}</TableCell>
@@ -73,7 +75,7 @@ export default function OrderList () {
                             <TableCell>{order.data.notes}</TableCell>
                             <TableCell><LuView className="text-2xl cursor-pointer"/></TableCell>
                         </TableRow>
-                        )}
+                     )}
                     </TableBody>
                 </Table>
 

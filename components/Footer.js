@@ -12,7 +12,7 @@ export function Footer () {
                 <p className="font-thin">Contact us</p>
                 <p className="font-thin">Location</p>
              </div>
-             <div>n
+             <div>
                 <p className="text-2xl font-bold text-blue-500">Legal</p>
                 <p className="font-thin">Privacy Policy</p>
                 <p className="font-thin">Disclaimer</p>
