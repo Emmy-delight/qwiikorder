@@ -4,9 +4,6 @@ import { redirect } from "next/navigation";
 
 export default async function Home() {
     const session = await auth();
-     if(!session) {
-       redirect("/auth/login")
-     }
   return (
     <main className="min-h-screen">
       {/* <h1 className="text-4xl font-bold text-blue-500 py-5 text-center">Welcome to QWIIKORDER</h1> */}

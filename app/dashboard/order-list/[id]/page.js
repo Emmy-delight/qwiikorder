@@ -1,7 +1,7 @@
    "use client"
 import { db } from "@/config/firebase.config";
 import { CircularProgress, Paper } from "@mui/material";
-import { doc, getDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc } from "firebase/firestore";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { RiDeleteBin5Line } from "react-icons/ri";
@@ -35,6 +35,8 @@ export default function Order ({params}) {
          }
          fetchOrder()
       },[id,router])
+           
+          
         if (loading)
         return(
             <div className="flex justify-center items-center h-[60vh]">
@@ -59,14 +61,14 @@ export default function Order ({params}) {
                 </div>
                  <div className="flex justify-between items-center gap-15 mb-5">
                     <h1 className="font-semibold text-gray-700">Amount</h1>
-                    <p className="text-sm text-gray-600">₦ {orders?.amount}</p>
+                    <p className="text-sm text-gray-600">₦ {orders?.amount.toLocaleString()}</p>
                 </div>
                  <div className="flex justify-between items-center gap-15 mb-5">
                     <h1 className="font-semibold text-gray-700">Status</h1>
                     <p className="text-sm text-gray-600">{orders?.status}</p>
                 </div>
                  <div className="mt-3 cursor-pointer w-[100px] h-[50px] bg-red-500 flex justify-center rounded-md items-center gap-3 ">
-                   <button className="flex justify-center items-center gap-3">
+                   <button className="flex justify-center items-center gap-1">
                    <RiDeleteBin5Line className="text-white" /> 
                    <span className="text-white">Delete</span>
                 </button>
